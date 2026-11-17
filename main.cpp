@@ -1,5 +1,6 @@
-#include "includes/json.hpp"
+#include "json.hpp"
 #include "Token.hpp"
+
 /*
 
 {
@@ -17,8 +18,6 @@
 	"float" : 6.7,
 	"neg" : -5
 }
-
-
 
 */
 
