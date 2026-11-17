@@ -1,55 +1,15 @@
 #ifndef JSON_HPP
 # define JSON_HPP
 
+# include "Token.hpp"
+# include "structs.hpp"
+
 # include <map>
 # include <string>
 # include <vector>
 # include <limits>
+# include <cstdlib>
 
-/*
-
-	objects -> std::map<std::string, t_value *>
-	array -> std::vector<t_value *>
-	else
-	thing -> t_value
-*/
-
-typedef enum e_token_types : uint8_t
-{
-	undefined,
-	string,
-	number,
-	object,
-	array,
-	ttrue,
-	tfalse,
-	tnull,
-	colon,
-	comma
-}	t_token_types;
-
-typedef enum e_value_types : uint8_t
-{
-	vstring,
-	vbool,
-	vchar,
-	vshort,
-	vint,
-	vfloat,
-	vlong,
-	vdouble,
-	vlonglong,
-	vlongdouble,
-	vnull,
-	vmap,
-	vvector
-}	t_value_types;
-
-typedef struct s_value
-{
-	t_value_types	type;
-	void			*value;
-}	t_value;
 
 class DuplicateObjectKey : public std::exception {
 	public:
@@ -59,5 +19,7 @@ class DuplicateObjectKey : public std::exception {
 	private:
 		std::string _message;
 };
+
+void	displayJson(t_value &json, int ac_depth);
 
 #endif

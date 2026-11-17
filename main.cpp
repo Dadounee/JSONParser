@@ -86,5 +86,8 @@ int main(void)
 			Token *exemple_child5_child1 = new Token("1.1e07", number, exemple_child5);
 			raw.push_back(exemple_child5_child1);
 
+	t_value	*hoping_for_best = convertTokens(raw);
+	displayJson(*hoping_for_best, 0);
+
 	return (0);
 }

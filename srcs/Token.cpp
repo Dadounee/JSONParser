@@ -1,8 +1,8 @@
 #include "Token.hpp"
 
-void	Token::Token(std::string token, t_token_types type, Token *parent): _token(token), _type(type), _parent(parent) {}
+Token::Token(std::string token, t_token_types type, Token *parent): _token(token), _type(type), _parent(parent) {}
 
-void	Token::Token(const Token& other): _token(other._token), _type(other._type), _parent(other._parent) {}
+Token::Token(const Token& other): _token(other._token), _type(other._type), _parent(other._parent) {}
 
 Token&	Token::operator=(const Token& other)
 {
@@ -15,4 +15,4 @@ Token&	Token::operator=(const Token& other)
 	return (*this);
 }
 
-void	Token::~Token() {}
+Token::~Token() {}

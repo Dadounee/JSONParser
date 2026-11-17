@@ -1,51 +1,13 @@
-#include "../includes/json.hpp"
-#include "../includes/Token.hpp"
+#include "json.hpp"
+#include "Token.hpp"
+#include <iostream>
 
-/*
-
-	if parent -> array, push_back
-
-
-*/
-t_value	*convertTokens(std::vector<Token *> &tokens)
-{
-	t_value *tree_root = new t_value;
-
-	std::vector<Token *>::iterator begin = tokens.begin();
-	std::vector<Token *>::iterator end = tokens.end();
-
-	switch (tokens[0]->_type)
-	{
-		case string:
-			tree_root = interpret_string(tokens[0]->_token);
-			break;
-		case number:
-			tree_root = interpret_number(tokens[0]->_token);
-			break;
-		case object:
-			tree_root = interpret_object(begin, end);
-			break;
-		case array:
-			tree_root = interpret_array(begin, end);
-			break;
-		case ttrue:
-			tree_root = interpret_ttrue();
-			break;
-		case tfalse:
-			tree_root = interpret_tfalse();
-			break;
-		case tnull:
-			tree_root = interpret_tnull();
-			break;
-		default:
-			break;
-	}
-
-	return (tree_root);
-}
+t_value	*interpret_array(std::vector<Token *>::iterator &actual, std::vector<Token *>::iterator &end);
+t_value	*interpret_object(std::vector<Token *>::iterator &actual, std::vector<Token *>::iterator &end);
 
 t_value	*interpret_string(std::string &value)
 {
+	std::cout << "\n\t\t" << value << "\n";
 	std::string	*val = new std::string(value);
 	t_value	*new_branch = new t_value;
 
@@ -91,21 +53,91 @@ t_value	*interpret_number(std::string &value)
 	return (new_branch);
 }
 
+t_value	*interpret_ttrue()
+{
+	bool	*boolean_val = new bool(true);
+	t_value	*new_branch = new t_value;
+
+	new_branch->type = vbool;
+	new_branch->value = boolean_val;
+
+	return (new_branch);
+}
+
+t_value	*interpret_tfalse()
+{
+	bool	*boolean_val = new bool(false);
+	t_value	*new_branch = new t_value;
+
+	new_branch->type = vbool;
+	new_branch->value = boolean_val;
+
+	return (new_branch);
+}
+
+t_value	*interpret_tnull()
+{
+	t_value	*new_branch = new t_value;
+
+	new_branch->type = vnull;
+	new_branch->value = NULL;
+
+	return (new_branch);
+}
+
+t_value	*convertTokens(std::vector<Token *> &tokens)
+{
+	t_value *tree_root = new t_value;
+
+	std::vector<Token *>::iterator begin = tokens.begin();
+	std::vector<Token *>::iterator end = tokens.end();
+
+	switch (tokens[0]->_type)
+	{
+		case string:
+			tree_root = interpret_string(tokens[0]->_token);
+			break;
+		case number:
+			tree_root = interpret_number(tokens[0]->_token);
+			break;
+		case object:
+			tree_root = interpret_object(begin, end);
+			break;
+		case array:
+			tree_root = interpret_array(begin, end);
+			break;
+		case ttrue:
+			tree_root = interpret_ttrue();
+			break;
+		case tfalse:
+			tree_root = interpret_tfalse();
+			break;
+		case tnull:
+			tree_root = interpret_tnull();
+			break;
+		default:
+			break;
+	}
+
+	return (tree_root);
+}
+
 t_value	*interpret_object(std::vector<Token *>::iterator &actual, std::vector<Token *>::iterator &end)
 {
 	t_value 							*obj_root = new t_value;
 	std::string							entry_name = "";
 	std::map<std::string, t_value *> 	*obj_values = new std::map<std::string, t_value *>;
 
+	actual++;
 	obj_root->value = obj_values;
-
-	for (actual; actual != end; actual++)
+	for (; actual != end; actual++)
 	{
 		if (entry_name == "")
 		{
+			std::cout << (int)(*actual)->_type;
 			entry_name = *(std::string *)(interpret_string((*actual)->_token))->value;
 
-			if ((*obj_values).find(entry_name) != obj_values->end());
+			if ((*obj_values).find(entry_name) != obj_values->end())
 				throw DuplicateObjectKey("Duplicate key in json object found.");
 			continue;
 		}
@@ -148,7 +180,8 @@ t_value	*interpret_array(std::vector<Token *>::iterator &actual, std::vector<Tok
 
 	array_root->value = arr_values;
 
-	for (actual; actual != end; actual++)
+	actual++;
+	for (; actual != end; actual++)
 	{
 		switch ((*actual)->_type)
 		{
@@ -159,9 +192,10 @@ t_value	*interpret_array(std::vector<Token *>::iterator &actual, std::vector<Tok
 				arr_values->push_back(interpret_number((*actual)->_token));
 				break;
 			case object:
+				arr_values->push_back(interpret_object(actual, end));
 				break;
 			case array:
-				arr_values->push_back(interpret_array(++actual, end));
+				arr_values->push_back(interpret_array(actual, end));
 				break;
 			case ttrue:
 				arr_values->push_back(interpret_ttrue());
@@ -179,45 +213,3 @@ t_value	*interpret_array(std::vector<Token *>::iterator &actual, std::vector<Tok
 
 	return (array_root);
 }
-
-t_value	*interpret_ttrue()
-{
-	bool	*boolean_val = new bool(true);
-	t_value	*new_branch = new t_value;
-
-	new_branch->type = vbool;
-	new_branch->value = boolean_val;
-
-	return (new_branch);
-}
-
-t_value	*interpret_tfalse()
-{
-	bool	*boolean_val = new bool(false);
-	t_value	*new_branch = new t_value;
-
-	new_branch->type = vbool;
-	new_branch->value = boolean_val;
-
-	return (new_branch);
-}
-
-t_value	*interpret_tnull()
-{
-	t_value	*new_branch = new t_value;
-
-	new_branch->type = vnull;
-	new_branch->value = NULL;
-
-	return (new_branch);
-}
-
-/*
-string,
-	number,
-	object,
-	array,
-	ttrue,
-	tfalse,
-	tnull,
-*/

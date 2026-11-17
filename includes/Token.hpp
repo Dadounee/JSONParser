@@ -2,6 +2,9 @@
 # define TOKEN_HPP
 
 # include "json.hpp"
+# include "structs.hpp"
+# include <string>
+# include <vector>
 
 class Token
 {
@@ -15,5 +18,7 @@ public:
 	Token&	operator=(const Token& other);
 	~Token();
 };
+
+t_value	*convertTokens(std::vector<Token *> &tokens);
 
 #endif
