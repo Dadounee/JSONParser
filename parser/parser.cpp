@@ -20,15 +20,15 @@ bool	is_values_parent_valid(Token *curr_parent, bool is_str)
 bool	check_bool(std::string& input, std::string::iterator& it, std::vector<Token *>& output, Token *&curr_parent)
 {
 	Token	*new_token;
-	if ((std::distance(it, input.end()) >= 5 && input.compare(it - input.begin(), 4, "true") == 0 && isspace(*it + 5) && *(it + 5) != '\v') ||
-	(std::distance(it, input.end()) >= 6 && input.compare(it - input.begin(), 5, "false") == 0 && isspace(*it + 6) && *(it + 6) != '\v') ||
-	(std::distance(it, input.end()) >= 5 && input.compare(it - input.begin(), 4, "null") == 0 && isspace(*it + 5) && *(it + 5) != '\v'))
+	if ((std::distance(it, input.end()) >= 5 && input.compare(it - input.begin(), 4, "true") == 0) ||
+	(std::distance(it, input.end()) >= 6 && input.compare(it - input.begin(), 5, "false") == 0) ||
+	(std::distance(it, input.end()) >= 5 && input.compare(it - input.begin(), 4, "null") == 0))
 	{
 		if (!is_values_parent_valid(curr_parent, false))
-			return (false);
-		if (input.compare(input.begin() - it, 4, "true") == 0)
+			return (true);
+		if (input.compare(it - input.begin(), 4, "true") == 0)
 			new_token = new Token("", ttrue, curr_parent);
-		else if (input.compare(input.begin() - it, 5, "false") == 0)
+		else if (input.compare(it - input.begin(), 5, "false") == 0)
 		{
 			new_token = new Token("", tfalse, curr_parent);
 			it++;
@@ -55,9 +55,9 @@ bool	do_string(std::string& input, std::string::iterator& it, std::vector<Token 
 			{
 				case 'u':
 					if (std::distance(it, input.end()) < 6)
-						return (1);
+						return (true);
 					if (!isxdigit((*it + 1)) || !isxdigit((*it + 2)) || !isxdigit((*it + 3)) || !isxdigit((*it + 4)))
-						return (1);
+						return (true);
 					std::advance(it, 4);
 					check_backslash = false;
 					break ;
@@ -65,13 +65,13 @@ bool	do_string(std::string& input, std::string::iterator& it, std::vector<Token 
 					check_backslash = false;
 					break ;
 				default:
-					return (1);
+					return (true);
 			}
 		}
 		else
 		{
 			if (!isprint(*it))
-				return (1);
+				return (true);
 			else if (*it == '\\')
 				check_backslash = true;
 		}
@@ -79,11 +79,11 @@ bool	do_string(std::string& input, std::string::iterator& it, std::vector<Token 
 	}
 	if (it == input.end())
 		return (true);
-	Token	*new_token = new Token(input.substr(start - input.begin(), start - it), string, curr_parent);
+	Token	*new_token = new Token(input.substr(start - input.begin(), it - start), string, curr_parent);
 	output.push_back(new_token);
-	if (!curr_parent || curr_parent->_type != string)
+	if (!curr_parent || (curr_parent->_type != string && curr_parent->_type != array))
 		curr_parent = new_token;
-	else
+	else if (curr_parent->_type == string)
 		curr_parent = curr_parent->_parent;
 	return (false);
 }
@@ -95,7 +95,7 @@ bool	do_number(std::string& input, std::string::iterator& it, std::vector<Token 
 	std::string::iterator	start = it;
 	if (*it == '-')
 		it++;
-	while (it != input.end() && !(isspace(*it) && *it != '\v'))
+	while (it != input.end() && !(isspace(*it) && *it != '\v') && *it != ']' && *it != ',' && *it != '}')
 	{
 		if (phase == 0)
 		{
@@ -166,7 +166,7 @@ bool	do_number(std::string& input, std::string::iterator& it, std::vector<Token 
 			return (true);
 		it++;
 	}
-	Token	*new_token = new Token(input.substr(start - input.begin(), start - it), number, curr_parent);
+	Token	*new_token = new Token(input.substr(start - input.begin(), it - start), number, curr_parent);
 	output.push_back(new_token);
 	if (curr_parent && curr_parent->_type == string)
 		curr_parent = curr_parent->_parent;
@@ -185,7 +185,13 @@ int	tokenizer(std::string& input, std::vector<Token *>& output)
 		{
 		case ']':
 			if (curr_parent != NULL && curr_parent->_type == array)
+			{
 				curr_parent = curr_parent->_parent;
+				if (curr_parent && curr_parent->_type != string && curr_parent->_type != array)
+					return (1);
+				else if (curr_parent->_type == string)
+					curr_parent = curr_parent->_parent;
+			}
 			else
 				return (1);
 			break ;
@@ -199,17 +205,17 @@ int	tokenizer(std::string& input, std::vector<Token *>& output)
 			if (!is_values_parent_valid(curr_parent, false))
 				return (1);
 			curr_token._type = object;
+			curr_token._parent = curr_parent;
 			curr_parent = new Token(curr_token);
 			output.push_back(curr_parent);
-			curr_token._parent = curr_parent;
 			break;
 		case '[':
 			if (!is_values_parent_valid(curr_parent, false))
 				return (1);
 			curr_token._type = array;
+			curr_token._parent = curr_parent;
 			curr_parent = new Token(curr_token);
 			output.push_back(curr_parent);
-			curr_token._parent = curr_parent;
 			break;
 		case '"':
 			it++;
@@ -217,8 +223,8 @@ int	tokenizer(std::string& input, std::vector<Token *>& output)
 				return (1);
 			break;
 		case ',':
-			if (curr_parent->_type != array && curr_parent->_type != object)
-				curr_parent = curr_parent->_parent;
+			if (curr_parent && curr_parent->_type != object && curr_parent->_type != array)
+				return (1);
 			break ;
 		case ':':
 			if (curr_parent->_type != string)
@@ -230,7 +236,7 @@ int	tokenizer(std::string& input, std::vector<Token *>& output)
 				if (!is_values_parent_valid(curr_parent, false) || do_number(input, it, output, curr_parent))
 					return (1);
 			}
-			else if (!check_bool(input, it, output, curr_parent))
+			else if (check_bool(input, it, output, curr_parent))
 				return (1);
 			break ;
 		}
