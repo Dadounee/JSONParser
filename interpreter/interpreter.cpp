@@ -7,7 +7,6 @@ t_value	*interpret_object(std::vector<Token *>::iterator &actual, std::vector<To
 
 t_value	*interpret_string(std::string &value)
 {
-	std::cout << "\n\t\t" << value << "\n";
 	std::string	*val = new std::string(value);
 	t_value	*new_branch = new t_value;
 
@@ -134,7 +133,6 @@ t_value	*interpret_object(std::vector<Token *>::iterator &actual, std::vector<To
 	{
 		if (entry_name == "")
 		{
-			std::cout << (int)(*actual)->_type;
 			entry_name = *(std::string *)(interpret_string((*actual)->_token))->value;
 
 			if ((*obj_values).find(entry_name) != obj_values->end())
@@ -150,10 +148,10 @@ t_value	*interpret_object(std::vector<Token *>::iterator &actual, std::vector<To
 				(*obj_values)[entry_name] = interpret_number((*actual)->_token);
 				break;
 			case object:
-				(*obj_values)[entry_name] = interpret_object(++actual, end);
+				(*obj_values)[entry_name] = interpret_object(actual, end);
 				break;
 			case array:
-				(*obj_values)[entry_name] = interpret_array(++actual, end);
+				(*obj_values)[entry_name] = interpret_array(actual, end);
 				break;
 			case ttrue:
 				(*obj_values)[entry_name] = interpret_ttrue();
@@ -168,6 +166,8 @@ t_value	*interpret_object(std::vector<Token *>::iterator &actual, std::vector<To
 				break;
 		}
 		entry_name = "";
+		if (actual == end)
+			break;
 	}
 
 	return (obj_root);
@@ -209,6 +209,8 @@ t_value	*interpret_array(std::vector<Token *>::iterator &actual, std::vector<Tok
 			default:
 				break;
 		}
+		if (actual == end)
+			break;
 	}
 
 	return (array_root);
