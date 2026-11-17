@@ -6,15 +6,14 @@
 
 typedef enum e_token_types : uint8_t
 {
+	undefined,
 	string,
 	number,
 	ttrue,
 	tfalse,
 	null,
-	obj_start,
-	obj_end,
-	arr_start,
-	arr_end,
+	object,
+	array,
 	colon,
 	comma
 }	t_token_types;
