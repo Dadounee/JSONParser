@@ -1,7 +1,8 @@
 #ifndef TOKEN_HPP
 # define TOKEN_HPP
 
-# include "json.hpp"
+# include <string>
+# include "structs.hpp"
 
 class Token
 {
