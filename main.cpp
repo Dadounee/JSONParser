@@ -1,20 +1,21 @@
 #include "includes/json.hpp"
+#include "Token.hpp"
 /*
 
 {
-	{
+	"obj" : {
 		"true" : true,
 		"false" : false,
 		"null" : null
 	},
-	[
+	"arr" : [
 		"hello world",
 		12,
 		"test"
 	],
-	1.1e07,
-	6.7,
-	-5
+	"exp" : 1.1e07,
+	"float" : 6.7,
+	"neg" : -5
 }
 
 
@@ -23,80 +24,68 @@
 
 int main(void)
 {
-	t_token exemple;
-	exemple.parent = NULL;
-	exemple.type = object;
-	exemple.token = "";
+	std::vector<Token *> raw;
 
-		t_token exemple_child1;
-		exemple_child1.parent = &exemple;
-		exemple_child1.type = object;
-		exemple_child1.token = "";
+	Token *exemple = new Token("", object, NULL);
 
-			t_token exemple_child1_child1;
-			exemple_child1.parent = &exemple_child1;
-			exemple_child1.type = ttrue;
-			exemple_child1.token = "";
+	raw.push_back(exemple);
 
-				t_token exemple_child1_child1_child1;
-				exemple_child1.parent = &exemple_child1;
-				exemple_child1.type = ttrue;
-				exemple_child1.token = "";
+		Token *exemple_child1 = new Token("obj", string, exemple);
+		raw.push_back(exemple_child1);
 
-			t_token exemple_child1_child2;
-			exemple_child1.parent = &exemple_child1;
-			exemple_child1.type = tfalse;
-			exemple_child1.token = "";
+			Token *exemple_child1_child1 = new Token("", object, exemple_child1);
+			raw.push_back(exemple_child1_child1);
 
-				t_token exemple_child1_child2_child1;
-				exemple_child1.parent = &exemple_child1;
-				exemple_child1.type = tfalse;
-				exemple_child1.token = "";
+				Token *exemple_child1_child1_child1 = new Token("true", string, exemple_child1_child1);
+				raw.push_back(exemple_child1_child1_child1);
 
-			t_token exemple_child1_child3;
-			exemple_child1.parent = &exemple_child1;
-			exemple_child1.type = tnull;
-			exemple_child1.token = "";
+					Token *exemple_child1_child1_child1_child1 = new Token("", ttrue, exemple_child1_child1_child1);
+					raw.push_back(exemple_child1_child1_child1_child1);
 
-				t_token exemple_child1_child3_child1;
-				exemple_child1.parent = &exemple_child1;
-				exemple_child1.type = tnull;
-				exemple_child1.token = "";
+				Token *exemple_child1_child1_child2 = new Token("false", string, exemple_child1_child1);
+				raw.push_back(exemple_child1_child1_child2);
 
-		t_token exemple_child2;
-		exemple_child2.parent = &exemple;
-		exemple_child2.type = array;
-		exemple_child2.token = "";
+					Token *exemple_child1_child1_child1_child2 = new Token("", tfalse, exemple_child1_child1_child2);
+					raw.push_back(exemple_child1_child1_child1_child2);
 
-			t_token exemple_child2_child1;
-			exemple_child2.parent = &exemple;
-			exemple_child2.type = string;
-			exemple_child2.token = "hello world";
+				Token *exemple_child1_child1_child3 = new Token("null", string, exemple_child1_child1);
+				raw.push_back(exemple_child1_child1_child3);
 
-			t_token exemple_child2_child2;
-			exemple_child2.parent = &exemple;
-			exemple_child2.type = number;
-			exemple_child2.token = "12";
+					Token *exemple_child1_child1_child1_child3 = new Token("", tnull, exemple_child1_child1_child3);
+					raw.push_back(exemple_child1_child1_child1_child3);
 
-			t_token exemple_child2_child3;
-			exemple_child2.parent = &exemple;
-			exemple_child2.type = string;
-			exemple_child2.token = "test";
+		Token *exemple_child2 = new Token("arr", string, exemple);
+		raw.push_back(exemple_child2);
+		
+			Token *exemple_child2_child1 = new Token("", array, exemple_child2);
+			raw.push_back(exemple_child2_child1);
 
-		t_token exemple_child3;
-		exemple_child3.parent = &exemple;
-		exemple_child3.type = number;
-		exemple_child3.token = "-5";
+				Token *exemple_child2_child1_child1 = new Token("hello world", string, exemple_child2_child1);
+				raw.push_back(exemple_child2_child1_child1);
 
-		t_token exemple_child4;
-		exemple_child4.parent = &exemple;
-		exemple_child4.type = number;
-		exemple_child4.token = "6.7";
+				Token *exemple_child2_child1_child2 = new Token("12", number, exemple_child2_child1);
+				raw.push_back(exemple_child2_child1_child2);
 
-		t_token exemple_child5;
-		exemple_child5.parent = &exemple;
-		exemple_child5.type = number;
-		exemple_child5.token = "1.1e07";
+				Token *exemple_child2_child1_child3 = new Token("test", string, exemple_child2_child1);
+				raw.push_back(exemple_child2_child1_child3);
+
+		Token *exemple_child3 = new Token("neg", string, exemple);
+		raw.push_back(exemple_child3);
+
+			Token *exemple_child3_child1 = new Token("-5", number, exemple_child3);
+			raw.push_back(exemple_child3_child1);
+
+		Token *exemple_child4 = new Token("float", string, exemple);
+		raw.push_back(exemple_child4);
+
+			Token *exemple_child4_child1 = new Token("6.7", number, exemple_child4);
+			raw.push_back(exemple_child4_child1);
+
+		Token *exemple_child5 = new Token("exp", string, exemple);
+		raw.push_back(exemple_child5);
+
+			Token *exemple_child5_child1 = new Token("1.1e07", number, exemple_child5);
+			raw.push_back(exemple_child5_child1);
 
 	return (0);
 }

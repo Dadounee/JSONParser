@@ -41,11 +41,4 @@ typedef struct s_value
 	void			*value;
 }	t_value;
 
-typedef struct s_token
-{
-	std::string		token;
-	t_token_types	type;
-	t_token 		*parent;
-}	t_token;
-
 #endif
