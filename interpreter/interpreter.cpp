@@ -86,7 +86,7 @@ t_value	*interpret_tnull()
 
 t_value	*convertTokens(std::vector<Token *> &tokens)
 {
-	t_value *tree_root = new t_value;
+	t_value *tree_root = NULL;
 
 	std::vector<Token *>::iterator begin = tokens.begin();
 	std::vector<Token *>::iterator end = tokens.end();
