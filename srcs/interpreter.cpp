@@ -2,25 +2,13 @@
 #include "Token.hpp"
 #include <iostream>
 
-JsonData	*interpret_array(std::vector<Token *>::iterator &actual, std::vector<Token *>::iterator &end);
-JsonData	*interpret_object(std::vector<Token *>::iterator &actual, std::vector<Token *>::iterator &end);
-
-JsonData	*interpret_string(std::string &value)
-{
-	std::string	*val = new std::string(value);
-	JsonData	*new_branch = new JsonData;
-
-	new_branch->type = vstring;
-	new_branch->value = val;
-
-	return (new_branch);
-}
+JsonData	*JSON_resources_internal(std::vector<Token *>::iterator &begin, std::vector<Token *>::iterator &end);
 
 JsonData	*interpret_number(std::string &value)
 {
-	bool 		decimal = (value.find('.') != std::string::npos);
+	bool 			decimal = (value.find('.') != std::string::npos);
 	JsonData		*new_branch = new JsonData;
-	long double	*nb = new (long double)(strtold(value.c_str(), NULL));
+	long double		*nb = new (long double)(strtold(value.c_str(), NULL));
 
 	new_branch->value = nb;
 
@@ -52,48 +40,13 @@ JsonData	*interpret_number(std::string &value)
 	return (new_branch);
 }
 
+JsonData	*interpret_string(std::string &value) { return (new JsonData(new std::string(value), vstring)); }
+
 JsonData	*interpret_ttrue() { return (new JsonData(new bool(true), vbool)); }
 
 JsonData	*interpret_tfalse() { return (new JsonData(new bool(false), vbool)); }
 
 JsonData	*interpret_tnull() { return (new JsonData(NULL, vnull)); }
-
-JsonData	*Json::JSON_resources(std::vector<Token *> &tokens)
-{
-	JsonData *tree_root = NULL;
-
-	std::vector<Token *>::iterator begin = tokens.begin();
-	std::vector<Token *>::iterator end = tokens.end();
-
-	switch (tokens[0]->_type)
-	{
-		case string:
-			tree_root = interpret_string(tokens[0]->_token);
-			break;
-		case number:
-			tree_root = interpret_number(tokens[0]->_token);
-			break;
-		case object:
-			tree_root = interpret_object(begin, end);
-			break;
-		case array:
-			tree_root = interpret_array(begin, end);
-			break;
-		case ttrue:
-			tree_root = interpret_ttrue();
-			break;
-		case tfalse:
-			tree_root = interpret_tfalse();
-			break;
-		case tnull:
-			tree_root = interpret_tnull();
-			break;
-		default:
-			break;
-	}
-
-	return (tree_root);
-}
 
 JsonData	*interpret_object(std::vector<Token *>::iterator &actual, std::vector<Token *>::iterator &end)
 {
@@ -113,34 +66,13 @@ JsonData	*interpret_object(std::vector<Token *>::iterator &actual, std::vector<T
 				throw Json::DuplicateObjectKey();
 			continue;
 		}
-		switch ((*actual)->_type)
+		if ((*actual)->_type == array || (*actual)->_type == object)
 		{
-			case string:
-				(*obj_values)[entry_name] = interpret_string((*actual)->_token);
-				break;
-			case number:
-				(*obj_values)[entry_name] = interpret_number((*actual)->_token);
-				break;
-			case object:
-				(*obj_values)[entry_name] = interpret_object(actual, end);
-				actual--;
-				break;
-			case array:
-				(*obj_values)[entry_name] = interpret_array(actual, end);
-				actual--;
-				break;
-			case ttrue:
-				(*obj_values)[entry_name] = interpret_ttrue();
-				break;
-			case tfalse:
-				(*obj_values)[entry_name] = interpret_tfalse();
-				break;
-			case tnull:
-				(*obj_values)[entry_name] = interpret_tnull();
-				break;
-			default:
-				break;
+			(*obj_values)[entry_name] = JSON_resources_internal(actual, end);
+			actual--;
 		}
+		else
+			(*obj_values)[entry_name] = JSON_resources_internal(actual, end);
 		entry_name = "";
 		if (actual == end)
 			break;
@@ -161,37 +93,49 @@ JsonData	*interpret_array(std::vector<Token *>::iterator &actual, std::vector<To
 	actual++;
 	for (; actual != end && (*actual)->_parent == parent; actual++)
 	{
-		switch ((*actual)->_type)
+		JsonData	*tmp;
+		if ((*actual)->_type == array || (*actual)->_type == object)
 		{
-			case string:
-				arr_values->push_back(interpret_string((*actual)->_token));
-				break;
-			case number:
-				arr_values->push_back(interpret_number((*actual)->_token));
-				break;
-			case object:
-				arr_values->push_back(interpret_object(actual, end));
-				actual--;
-				break;
-			case array:
-				arr_values->push_back(interpret_array(actual, end));
-				actual--;
-				break;
-			case ttrue:
-				arr_values->push_back(interpret_ttrue());
-				break;
-			case tfalse:
-				arr_values->push_back(interpret_tfalse());
-				break;
-			case tnull:
-				arr_values->push_back(interpret_tnull());
-				break;
-			default:
-				break;
+			tmp = JSON_resources_internal(actual, end);
+			actual--;
 		}
+		else
+			tmp = JSON_resources_internal(actual, end);
+		if (tmp != NULL)
+			arr_values->push_back(tmp);
 		if (actual == end)
 			break;
 	}
 
 	return (array_root);
+}
+
+JsonData	*JSON_resources_internal(std::vector<Token *>::iterator &begin, std::vector<Token *>::iterator &end)
+{
+	switch ((*begin)->_type)
+	{
+		case string:
+			return (interpret_string((*begin)->_token));
+		case number:
+			return (interpret_number((*begin)->_token));
+		case object:
+			return (interpret_object(begin, end));
+		case array:
+			return (interpret_array(begin, end));
+		case ttrue:
+			return (interpret_ttrue());
+		case tfalse:
+			return (interpret_tfalse());
+		case tnull:
+			return (interpret_tnull());
+		default:
+			return (NULL);
+	}
+}
+
+JsonData	*Json::JSON_resources(std::vector<Token *> &tokens)
+{
+	std::vector<Token *>::iterator	begin = tokens.begin();
+	std::vector<Token *>::iterator	end = tokens.end();
+	return (JSON_resources_internal(begin, end));
 }
