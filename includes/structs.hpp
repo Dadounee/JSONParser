@@ -34,8 +34,8 @@ typedef enum e_token_types : char
 
 typedef struct s_value
 {
-	t_value_types	type;
 	void			*value;
+	t_value_types	type;
 }	t_value;
 
 #endif

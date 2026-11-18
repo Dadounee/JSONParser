@@ -23,76 +23,81 @@
 
 int main(void)
 {
-	// std::vector<Token *> raw;
-
-	// Token *exemple = new Token("", object, NULL);
-
-	// raw.push_back(exemple);
-
-	// 	Token *exemple_child1 = new Token("obj", string, exemple);
-	// 	raw.push_back(exemple_child1);
-
-	// 		Token *exemple_child1_child1 = new Token("", object, exemple_child1);
-	// 		raw.push_back(exemple_child1_child1);
-
-	// 			Token *exemple_child1_child1_child1 = new Token("true", string, exemple_child1_child1);
-	// 			raw.push_back(exemple_child1_child1_child1);
-
-	// 				Token *exemple_child1_child1_child1_child1 = new Token("", ttrue, exemple_child1_child1_child1);
-	// 				raw.push_back(exemple_child1_child1_child1_child1);
-
-	// 			Token *exemple_child1_child1_child2 = new Token("false", string, exemple_child1_child1);
-	// 			raw.push_back(exemple_child1_child1_child2);
-
-	// 				Token *exemple_child1_child1_child1_child2 = new Token("", tfalse, exemple_child1_child1_child2);
-	// 				raw.push_back(exemple_child1_child1_child1_child2);
-
-	// 			Token *exemple_child1_child1_child3 = new Token("null", string, exemple_child1_child1);
-	// 			raw.push_back(exemple_child1_child1_child3);
-
-	// 				Token *exemple_child1_child1_child1_child3 = new Token("", tnull, exemple_child1_child1_child3);
-	// 				raw.push_back(exemple_child1_child1_child1_child3);
-
-	// 	Token *exemple_child2 = new Token("arr", string, exemple);
-	// 	raw.push_back(exemple_child2);
-		
-	// 		Token *exemple_child2_child1 = new Token("", array, exemple_child2);
-	// 		raw.push_back(exemple_child2_child1);
-
-	// 			Token *exemple_child2_child1_child1 = new Token("hello world", string, exemple_child2_child1);
-	// 			raw.push_back(exemple_child2_child1_child1);
-
-	// 			Token *exemple_child2_child1_child2 = new Token("12", number, exemple_child2_child1);
-	// 			raw.push_back(exemple_child2_child1_child2);
-
-	// 			Token *exemple_child2_child1_child3 = new Token("test", string, exemple_child2_child1);
-	// 			raw.push_back(exemple_child2_child1_child3);
-
-	// 	Token *exemple_child3 = new Token("neg", string, exemple);
-	// 	raw.push_back(exemple_child3);
-
-	// 		Token *exemple_child3_child1 = new Token("-5", number, exemple_child3);
-	// 		raw.push_back(exemple_child3_child1);
-
-	// 	Token *exemple_child4 = new Token("float", string, exemple);
-	// 	raw.push_back(exemple_child4);
-
-	// 		Token *exemple_child4_child1 = new Token("6.7", number, exemple_child4);
-	// 		raw.push_back(exemple_child4_child1);
-
-	// 	Token *exemple_child5 = new Token("exp", string, exemple);
-	// 	raw.push_back(exemple_child5);
-
-	// 		Token *exemple_child5_child1 = new Token("1.1e07", number, exemple_child5);
-	// 		raw.push_back(exemple_child5_child1);
-
 	std::vector<Token *> raw;
 
-	Token *exemple = new Token("", array, NULL);
+	Token *exemple = new Token("", object, NULL);
+
 	raw.push_back(exemple);
 
-	t_value	*hoping_for_best = convertTokens(raw);
-	std::cout << sizeof(*hoping_for_best) << " " << hoping_for_best->type << std::endl;
+		Token *exemple_child1 = new Token("obj", string, exemple);
+		raw.push_back(exemple_child1);
+
+			Token *exemple_child1_child1 = new Token("", object, exemple_child1);
+			raw.push_back(exemple_child1_child1);
+
+				Token *exemple_child1_child1_child1 = new Token("true", string, exemple_child1_child1);
+				raw.push_back(exemple_child1_child1_child1);
+
+					Token *exemple_child1_child1_child1_child1 = new Token("", ttrue, exemple_child1_child1_child1);
+					raw.push_back(exemple_child1_child1_child1_child1);
+
+				Token *exemple_child1_child1_child2 = new Token("false", string, exemple_child1_child1);
+				raw.push_back(exemple_child1_child1_child2);
+
+					Token *exemple_child1_child1_child1_child2 = new Token("", tfalse, exemple_child1_child1_child2);
+					raw.push_back(exemple_child1_child1_child1_child2);
+
+				Token *exemple_child1_child1_child3 = new Token("null", string, exemple_child1_child1);
+				raw.push_back(exemple_child1_child1_child3);
+
+					Token *exemple_child1_child1_child1_child3 = new Token("", tnull, exemple_child1_child1_child3);
+					raw.push_back(exemple_child1_child1_child1_child3);
+
+		Token *exemple_child2 = new Token("arr", string, exemple);
+		raw.push_back(exemple_child2);
+		
+			Token *exemple_child2_child1 = new Token("", array, exemple_child2);
+			raw.push_back(exemple_child2_child1);
+
+				Token *exemple_child2_child1_child1 = new Token("hello world", string, exemple_child2_child1);
+				raw.push_back(exemple_child2_child1_child1);
+
+				Token *exemple_child2_child1_child2 = new Token("12", number, exemple_child2_child1);
+				raw.push_back(exemple_child2_child1_child2);
+
+				Token *exemple_child2_child1_child3 = new Token("test", string, exemple_child2_child1);
+				raw.push_back(exemple_child2_child1_child3);
+
+		Token *exemple_child3 = new Token("neg", string, exemple);
+		raw.push_back(exemple_child3);
+
+			Token *exemple_child3_child1 = new Token("-5", number, exemple_child3);
+			raw.push_back(exemple_child3_child1);
+
+		Token *exemple_child4 = new Token("float", string, exemple);
+		raw.push_back(exemple_child4);
+
+			Token *exemple_child4_child1 = new Token("6.7", number, exemple_child4);
+			raw.push_back(exemple_child4_child1);
+
+		Token *exemple_child5 = new Token("exp", string, exemple);
+		raw.push_back(exemple_child5);
+
+			Token *exemple_child5_child1 = new Token("1.1e07", number, exemple_child5);
+			raw.push_back(exemple_child5_child1);
+
+	// std::vector<Token *> raw;
+
+	// Token *exemple = new Token("", array, NULL);
+	// raw.push_back(exemple);
+
+	t_value	*hoping_for_best = NULL;
+	std::cout << hoping_for_best << std::endl;
+	hoping_for_best = JSON_resources(raw);
+	std::cout << hoping_for_best << std::endl;
+	// std::map<std::string, t_value *> *MYFIRSTFCKINGOBJECT = (std::map<std::string, t_value *> *)hoping_for_best->value;
+	// for (std::map<std::string, t_value *>::iterator it = MYFIRSTFCKINGOBJECT->begin(); it != MYFIRSTFCKINGOBJECT->end(); it++)
+	// 	std::cout << it->first << std::endl;
 	displayJson(*hoping_for_best, 0);
 
 	return (0);

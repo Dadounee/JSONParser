@@ -19,6 +19,6 @@ public:
 	~Token();
 };
 
-t_value	*convertTokens(std::vector<Token *> &tokens);
+t_value	*JSON_resources(std::vector<Token *> &tokens);
 
 #endif

@@ -20,7 +20,7 @@ t_value	*interpret_number(std::string &value)
 {
 	bool 		decimal = (value.find('.') != std::string::npos);
 	t_value		*new_branch = new t_value;
-	long double	*nb = new long double(strtold(value.c_str(), NULL));
+	long double	*nb = new (long double)(strtold(value.c_str(), NULL));
 
 	new_branch->value = nb;
 
@@ -84,7 +84,7 @@ t_value	*interpret_tnull()
 	return (new_branch);
 }
 
-t_value	*convertTokens(std::vector<Token *> &tokens)
+t_value	*JSON_resources(std::vector<Token *> &tokens)
 {
 	t_value *tree_root = NULL;
 
@@ -123,13 +123,15 @@ t_value	*convertTokens(std::vector<Token *> &tokens)
 
 t_value	*interpret_object(std::vector<Token *>::iterator &actual, std::vector<Token *>::iterator &end)
 {
-	t_value 							*obj_root = new t_value;
 	std::string							entry_name = "";
 	std::map<std::string, t_value *> 	*obj_values = new std::map<std::string, t_value *>;
+	t_value								tmp = { .value = obj_values, .type = vmap};
+	t_value 							*obj_root = new t_value(tmp);
+	Token								*parent = *actual;
 
 	actual++;
-	obj_root->value = obj_values;
-	for (; actual != end; actual++)
+	// std::cout << parent << " " << (*actual)->_parent << std::endl;
+	for (; actual != end && (((*actual)->_parent == parent && entry_name == "") || entry_name != ""); actual++)
 	{
 		if (entry_name == "")
 		{
@@ -149,9 +151,11 @@ t_value	*interpret_object(std::vector<Token *>::iterator &actual, std::vector<To
 				break;
 			case object:
 				(*obj_values)[entry_name] = interpret_object(actual, end);
+				actual--;
 				break;
 			case array:
 				(*obj_values)[entry_name] = interpret_array(actual, end);
+				actual--;
 				break;
 			case ttrue:
 				(*obj_values)[entry_name] = interpret_ttrue();
@@ -177,11 +181,13 @@ t_value	*interpret_array(std::vector<Token *>::iterator &actual, std::vector<Tok
 {
 	t_value 				*array_root = new t_value;
 	std::vector<t_value * > *arr_values = new std::vector<t_value *>;
+	Token					*parent = *actual;
 
+	array_root->type = vvector;
 	array_root->value = arr_values;
 
 	actual++;
-	for (; actual != end; actual++)
+	for (; actual != end && (*actual)->_parent == parent; actual++)
 	{
 		switch ((*actual)->_type)
 		{
@@ -193,9 +199,11 @@ t_value	*interpret_array(std::vector<Token *>::iterator &actual, std::vector<Tok
 				break;
 			case object:
 				arr_values->push_back(interpret_object(actual, end));
+				actual--;
 				break;
 			case array:
 				arr_values->push_back(interpret_array(actual, end));
+				actual--;
 				break;
 			case ttrue:
 				arr_values->push_back(interpret_ttrue());

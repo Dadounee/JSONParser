@@ -14,10 +14,14 @@ void	displayArr(t_value &json, int ac_depth)
 
 	for (size_t i = 0; i < vals.size(); i++)
 	{
+		for (int i = 0; i < ac_depth; i++)
+			std::cout << "\t";
 		displayJson(*vals[i], ac_depth);
-		std::cout << ",\n";
+		if (i+1 != vals.size())
+			std::cout << ",";
+		std::cout << "\n";
 	}
-	for (int i = 0; i < ac_depth-1; i++)
+	for (int i = 0; i < ac_depth; i++)
 		std::cout << "\t";
 	std::cout << "]";
 }
@@ -32,13 +36,19 @@ void	displayObj(t_value &json, int ac_depth)
 
 	for (std::map<std::string, t_value *>::iterator it= vals.begin(); it != vals.end(); it++)
 	{
-		displayJson(*it->second, ac_depth);
+		for (int i = 0; i < ac_depth; i++)
+			std::cout << "\t";
+		std::cout << "\"" << it->first << "\"";
 		std::cout << ":";
-		it++;
 		displayJson(*it->second, 0);
-		std::cout << ",\n";
+		if (it++ != vals.end())
+		{
+			std::cout << ",";
+			it--;
+		}
+		std::cout << "\n";
 	}
-	for (int i = 0; i < ac_depth-1; i++)
+	for (int i = 0; i < ac_depth; i++)
 		std::cout << "\t";
 	std::cout << "}";
 }
