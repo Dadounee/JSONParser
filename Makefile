@@ -5,9 +5,9 @@ SRC= \
 	main.cpp \
 	srcs/Token.cpp \
 	srcs/Json.cpp \
-	parser/parser.cpp \
-	interpreter/interpreter.cpp \
-	interpreter/displayJson.cpp
+	srcs/parser.cpp \
+	srcs/interpreter.cpp \
+	srcs/displayJson.cpp
 
 OBJ=$(SRC:.cpp=.o)
 NAME=test
