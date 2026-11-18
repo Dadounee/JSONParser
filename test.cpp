@@ -29,9 +29,11 @@ int main(void)
 	JsonData	*hoping_for_best = NULL;
 	hoping_for_best = Json::convert(input);
 
-	Json::display(*hoping_for_best);
-
-	delete hoping_for_best;
+	if (hoping_for_best)
+	{
+		Json::display(*hoping_for_best);
+		delete hoping_for_best;
+	}
 
 	return (0);
 }

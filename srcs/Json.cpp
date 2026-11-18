@@ -73,7 +73,11 @@ JsonData	*Json::convert(std::string& to_convert)
 	std::vector<Token *>	res;
 	int code = tokenizer(to_convert, res);
 	if (code)
+	{
+		for (size_t i = 0; i < res.size(); i++)
+			delete res[i];
 		return (NULL);
+	}
 	JsonData	*ret = JSON_resources(res);
 	for (size_t i = 0; i < res.size(); i++)
 		delete res[i];
