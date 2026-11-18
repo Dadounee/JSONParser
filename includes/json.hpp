@@ -20,7 +20,9 @@ class DuplicateObjectKey : public std::exception {
 		std::string _message;
 };
 
+class Token;
+
 int	tokenizer(std::string& input, std::vector<Token *>& output);
-void	displayJson(t_value &json, int ac_depth);
+void	displayJson(t_value &json, int ac_depth, bool in_obj);
 
 #endif

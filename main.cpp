@@ -109,9 +109,9 @@ int main(void)
 	// std::map<std::string, t_value *> *MYFIRSTFCKINGOBJECT = (std::map<std::string, t_value *> *)hoping_for_best->value;
 	// for (std::map<std::string, t_value *>::iterator it = MYFIRSTFCKINGOBJECT->begin(); it != MYFIRSTFCKINGOBJECT->end(); it++)
 	// 	std::cout << it->first << std::endl;
-	displayJson(*hoping_for_best, 0);
+	displayJson(*hoping_for_best, 0, false);
 	for (size_t i = 0; i < res.size(); i++)
 		delete res[i];
 
-	return (0);
+	return (ret);
 }

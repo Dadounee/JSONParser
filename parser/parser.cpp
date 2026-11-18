@@ -36,7 +36,7 @@ bool	check_bool(std::string& input, std::string::iterator& it, std::vector<Token
 		else
 			new_token = new Token("", tnull, curr_parent);
 		output.push_back(new_token);
-		it += 4;
+		it += 3;
 		if (curr_parent && curr_parent->_type == string)
 			curr_parent = curr_parent->_parent;
 	}
@@ -168,6 +168,8 @@ bool	do_number(std::string& input, std::string::iterator& it, std::vector<Token 
 	}
 	Token	*new_token = new Token(input.substr(start - input.begin(), it - start), number, curr_parent);
 	output.push_back(new_token);
+	if (it != input.end())
+		it--;
 	if (curr_parent && curr_parent->_type == string)
 		curr_parent = curr_parent->_parent;
 	return (false);
@@ -197,7 +199,13 @@ int	tokenizer(std::string& input, std::vector<Token *>& output)
 			break ;
 		case '}':
 			if (curr_parent != NULL && curr_parent->_type == object)
+			{
 				curr_parent = curr_parent->_parent;
+				if (curr_parent != NULL && curr_parent->_type != string)
+					return (1);
+				else if (curr_parent && curr_parent->_type == string)
+					curr_parent = curr_parent->_parent;
+			}
 			else
 				return (1);
 			break ;

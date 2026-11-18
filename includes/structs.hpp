@@ -1,7 +1,7 @@
 #ifndef STRUCT_HPP
 # define STRUCT_HPP
 
-typedef enum e_value_types : char
+typedef enum e_value_types
 {
 	vstring,
 	vnull,
@@ -18,7 +18,7 @@ typedef enum e_value_types : char
 	vlongdouble
 }	t_value_types;
 
-typedef enum e_token_types : char
+typedef enum e_token_types
 {
 	undefined,
 	string,

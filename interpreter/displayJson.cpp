@@ -2,26 +2,22 @@
 #include "Token.hpp"
 #include <iostream>
 
-void	displayJson(t_value &json, int ac_depth);
+void	displayJson(t_value &json, int ac_depth, bool in_obj);
 
 void	displayArr(t_value &json, int ac_depth)
 {
 	std::vector<t_value *>	vals = *(std::vector<t_value *> *)json.value;
 
-	for (int i = 0; i < ac_depth-1; i++)
-		std::cout << "\t";
-	std::cout << "[\n";
-
 	for (size_t i = 0; i < vals.size(); i++)
 	{
 		for (int i = 0; i < ac_depth; i++)
 			std::cout << "\t";
-		displayJson(*vals[i], ac_depth);
+		displayJson(*vals[i], ac_depth, true);
 		if (i+1 != vals.size())
 			std::cout << ",";
 		std::cout << "\n";
 	}
-	for (int i = 0; i < ac_depth; i++)
+	for (int i = 0; i < ac_depth-1; i++)
 		std::cout << "\t";
 	std::cout << "]";
 }
@@ -30,33 +26,29 @@ void	displayObj(t_value &json, int ac_depth)
 {
 	std::map<std::string, t_value *>	vals = *(std::map<std::string, t_value *> *)json.value;
 
-	for (int i = 0; i < ac_depth-1; i++)
-		std::cout << "\t";
-	std::cout << "{\n";
-
 	for (std::map<std::string, t_value *>::iterator it= vals.begin(); it != vals.end(); it++)
 	{
 		for (int i = 0; i < ac_depth; i++)
 			std::cout << "\t";
 		std::cout << "\"" << it->first << "\"";
 		std::cout << ":";
-		displayJson(*it->second, 0);
-		if (it++ != vals.end())
-		{
+		displayJson(*it->second, ac_depth, true);
+		if (it != --vals.end())
 			std::cout << ",";
-			it--;
-		}
 		std::cout << "\n";
 	}
-	for (int i = 0; i < ac_depth; i++)
+	for (int i = 0; i < ac_depth-1; i++)
 		std::cout << "\t";
 	std::cout << "}";
 }
 
-void	displayJson(t_value &json, int ac_depth)
+void	displayJson(t_value &json, int ac_depth, bool in_obj)
 {
-	for (int i = 0; i < ac_depth; i++)
-		std::cout << "\t";
+	if (!in_obj)
+	{
+		for (int i = 0; i < ac_depth; i++)
+			std::cout << "\t";
+	}
 	switch (json.type)
 	{
 	case vstring:
@@ -69,13 +61,17 @@ void	displayJson(t_value &json, int ac_depth)
 		std::cout << (*(bool *)json.value ? "true" : "false");
 		break;
 	case vmap:
+		std::cout << "{\n";
 		displayObj(json, ac_depth + 1);
 		break;
 	case vvector:
+		std::cout << "[\n";
 		displayArr(json, ac_depth + 1);
 		break;
 	default:
 		std::cout << *(long double *)json.value;
 		break;
 	}
+	if (ac_depth == 0)
+		std::cout << std::endl;
 }
