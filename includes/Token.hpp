@@ -1,9 +1,7 @@
 #ifndef TOKEN_HPP
 # define TOKEN_HPP
 
-# include "Json.hpp"
 # include <string>
-# include <vector>
 
 typedef enum e_token_types
 {

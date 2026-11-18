@@ -38,8 +38,6 @@ class JsonData
 		JsonData&		operator=(const JsonData& other);
 };
 
-class Token;
-
 class Json
 {
 	private:
