@@ -2,7 +2,6 @@
 # define TOKEN_HPP
 
 # include "Json.hpp"
-# include "structs.hpp"
 # include <string>
 # include <vector>
 

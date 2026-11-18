@@ -2,13 +2,13 @@
 #include "Token.hpp"
 #include <iostream>
 
-t_value	*interpret_array(std::vector<Token *>::iterator &actual, std::vector<Token *>::iterator &end);
-t_value	*interpret_object(std::vector<Token *>::iterator &actual, std::vector<Token *>::iterator &end);
+JsonData	*interpret_array(std::vector<Token *>::iterator &actual, std::vector<Token *>::iterator &end);
+JsonData	*interpret_object(std::vector<Token *>::iterator &actual, std::vector<Token *>::iterator &end);
 
-t_value	*interpret_string(std::string &value)
+JsonData	*interpret_string(std::string &value)
 {
 	std::string	*val = new std::string(value);
-	t_value	*new_branch = new t_value;
+	JsonData	*new_branch = new JsonData;
 
 	new_branch->type = vstring;
 	new_branch->value = val;
@@ -16,10 +16,10 @@ t_value	*interpret_string(std::string &value)
 	return (new_branch);
 }
 
-t_value	*interpret_number(std::string &value)
+JsonData	*interpret_number(std::string &value)
 {
 	bool 		decimal = (value.find('.') != std::string::npos);
-	t_value		*new_branch = new t_value;
+	JsonData		*new_branch = new JsonData;
 	long double	*nb = new (long double)(strtold(value.c_str(), NULL));
 
 	new_branch->value = nb;
@@ -52,41 +52,15 @@ t_value	*interpret_number(std::string &value)
 	return (new_branch);
 }
 
-t_value	*interpret_ttrue()
+JsonData	*interpret_ttrue() { return (new JsonData(new bool(true), vbool)); }
+
+JsonData	*interpret_tfalse() { return (new JsonData(new bool(false), vbool)); }
+
+JsonData	*interpret_tnull() { return (new JsonData(NULL, vnull)); }
+
+JsonData	*Json::JSON_resources(std::vector<Token *> &tokens)
 {
-	bool	*boolean_val = new bool(true);
-	t_value	*new_branch = new t_value;
-
-	new_branch->type = vbool;
-	new_branch->value = boolean_val;
-
-	return (new_branch);
-}
-
-t_value	*interpret_tfalse()
-{
-	bool	*boolean_val = new bool(false);
-	t_value	*new_branch = new t_value;
-
-	new_branch->type = vbool;
-	new_branch->value = boolean_val;
-
-	return (new_branch);
-}
-
-t_value	*interpret_tnull()
-{
-	t_value	*new_branch = new t_value;
-
-	new_branch->type = vnull;
-	new_branch->value = NULL;
-
-	return (new_branch);
-}
-
-t_value	*Json::JSON_resources(std::vector<Token *> &tokens)
-{
-	t_value *tree_root = NULL;
+	JsonData *tree_root = NULL;
 
 	std::vector<Token *>::iterator begin = tokens.begin();
 	std::vector<Token *>::iterator end = tokens.end();
@@ -121,21 +95,19 @@ t_value	*Json::JSON_resources(std::vector<Token *> &tokens)
 	return (tree_root);
 }
 
-t_value	*interpret_object(std::vector<Token *>::iterator &actual, std::vector<Token *>::iterator &end)
+JsonData	*interpret_object(std::vector<Token *>::iterator &actual, std::vector<Token *>::iterator &end)
 {
 	std::string							entry_name = "";
-	std::map<std::string, t_value *> 	*obj_values = new std::map<std::string, t_value *>;
-	t_value								tmp = { .value = obj_values, .type = vmap};
-	t_value 							*obj_root = new t_value(tmp);
+	std::map<std::string, JsonData *> 	*obj_values = new std::map<std::string, JsonData *>;
+	JsonData 							*obj_root = new JsonData(obj_values, vmap);
 	Token								*parent = *actual;
 
 	actual++;
-	// std::cout << parent << " " << (*actual)->_parent << std::endl;
 	for (; actual != end && (((*actual)->_parent == parent && entry_name == "") || entry_name != ""); actual++)
 	{
 		if (entry_name == "")
 		{
-			entry_name = *(std::string *)(interpret_string((*actual)->_token))->value;
+			entry_name = (*actual)->_token;
 
 			if ((*obj_values).find(entry_name) != obj_values->end())
 				throw Json::DuplicateObjectKey();
@@ -177,10 +149,10 @@ t_value	*interpret_object(std::vector<Token *>::iterator &actual, std::vector<To
 	return (obj_root);
 }
 
-t_value	*interpret_array(std::vector<Token *>::iterator &actual, std::vector<Token *>::iterator &end)
+JsonData	*interpret_array(std::vector<Token *>::iterator &actual, std::vector<Token *>::iterator &end)
 {
-	t_value 				*array_root = new t_value;
-	std::vector<t_value * > *arr_values = new std::vector<t_value *>;
+	JsonData 				*array_root = new JsonData;
+	std::vector<JsonData * > *arr_values = new std::vector<JsonData *>;
 	Token					*parent = *actual;
 
 	array_root->type = vvector;

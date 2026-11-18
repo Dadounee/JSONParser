@@ -11,8 +11,8 @@
 
 typedef enum e_value_types
 {
-	vstring,
 	vnull,
+	vstring,
 	vmap,
 	vvector,
 	vbool,
@@ -32,7 +32,8 @@ class JsonData
 		void			*value;
 		t_value_types	type;
 		JsonData();
-		JsonData(const Json& other);
+		JsonData(void *val, t_value_types typ);
+		JsonData(const JsonData& other);
 		~JsonData();
 		JsonData&		operator=(const JsonData& other);
 };
@@ -46,9 +47,9 @@ class Json
 		Json(const Json& other);
 		static int		tokenizer(std::string& input, std::vector<Token *>& output);
 		static JsonData	*JSON_resources(std::vector<Token *> &tokens);
-		static void		displayArr(t_value &json, int ac_depth);
-		static void		displayObj(t_value &json, int ac_depth);
-		static void		displayJson(t_value &json, int ac_depth, bool in_obj);
+		static void		displayArr(JsonData &json, int ac_depth);
+		static void		displayObj(JsonData &json, int ac_depth);
+		static void		displayJson(JsonData &json, int ac_depth, bool in_obj);
 	public:
 		class DuplicateObjectKey : public std::exception {
 			public: virtual const char* what() const throw() { return "Duplicate key in json object found."; };

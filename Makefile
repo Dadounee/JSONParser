@@ -4,6 +4,7 @@ INCLUDES=-Iincludes
 SRC= \
 	main.cpp \
 	srcs/Token.cpp \
+	srcs/Json.cpp \
 	parser/parser.cpp \
 	interpreter/interpreter.cpp \
 	interpreter/displayJson.cpp
