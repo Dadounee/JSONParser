@@ -1,18 +1,10 @@
 #include "Json.hpp"
 
-JsonData::JsonData() : value(NULL), type(vnull)
-{
+JsonData::JsonData() : value(NULL), type(vnull) {}
 
-}
+JsonData::JsonData(const JsonData& other): value(other.value), type(other.type) {}
 
-JsonData::JsonData(const JsonData& other): value(other.value), type(other.type)
-{
-
-}
-JsonData::JsonData(void *val, t_value_types typ): value(val), type(typ)
-{
-
-}
+JsonData::JsonData(void *val, t_value_types typ): value(val), type(typ) {}
 
 JsonData::~JsonData()
 {
@@ -67,8 +59,11 @@ JsonData::~JsonData()
 
 JsonData&		JsonData::operator=(const JsonData& other)
 {
-	value = other.value;
-	type = other.type;
+	if (this != &other)
+	{
+		value = other.value;
+		type = other.type;
+	}
 	return (*this);
 }
 
