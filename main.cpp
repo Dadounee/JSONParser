@@ -1,8 +1,5 @@
-#include <string>
-#include <vector>
 #include "Json.hpp"
-#include "Token.hpp"
-#include <iostream>
+
 /*
 
 {
@@ -24,8 +21,6 @@
 {"obj":{"true":true,"false":false,"null":null},"arr":["hello world",12,"test"],"exp" : 1.1e07,"float" : 6.7,"neg":-5}
 
 */
-
-int	tokenizer(std::string& input, std::vector<Token *>& output);
 
 int main(void)
 {
