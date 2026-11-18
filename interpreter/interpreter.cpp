@@ -1,4 +1,4 @@
-#include "json.hpp"
+#include "Json.hpp"
 #include "Token.hpp"
 #include <iostream>
 
@@ -84,7 +84,7 @@ t_value	*interpret_tnull()
 	return (new_branch);
 }
 
-t_value	*JSON_resources(std::vector<Token *> &tokens)
+t_value	*Json::JSON_resources(std::vector<Token *> &tokens)
 {
 	t_value *tree_root = NULL;
 
@@ -138,7 +138,7 @@ t_value	*interpret_object(std::vector<Token *>::iterator &actual, std::vector<To
 			entry_name = *(std::string *)(interpret_string((*actual)->_token))->value;
 
 			if ((*obj_values).find(entry_name) != obj_values->end())
-				throw DuplicateObjectKey("Duplicate key in json object found.");
+				throw Json::DuplicateObjectKey();
 			continue;
 		}
 		switch ((*actual)->_type)

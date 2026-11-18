@@ -1,5 +1,5 @@
-#ifndef STRUCT_HPP
-# define STRUCT_HPP
+#ifndef STRUCTS_HPP
+# define STRUCTS_HPP
 
 typedef enum e_value_types
 {
@@ -17,20 +17,6 @@ typedef enum e_value_types
 	vlonglong,
 	vlongdouble
 }	t_value_types;
-
-typedef enum e_token_types
-{
-	undefined,
-	string,
-	number,
-	object,
-	array,
-	ttrue,
-	tfalse,
-	tnull,
-	colon,
-	comma
-}	t_token_types;
 
 typedef struct s_value
 {

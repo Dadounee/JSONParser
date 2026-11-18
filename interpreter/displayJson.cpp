@@ -1,10 +1,8 @@
-#include "json.hpp"
+#include "Json.hpp"
 #include "Token.hpp"
 #include <iostream>
 
-void	displayJson(t_value &json, int ac_depth, bool in_obj);
-
-void	displayArr(t_value &json, int ac_depth)
+void	Json::displayArr(t_value &json, int ac_depth)
 {
 	std::vector<t_value *>	vals = *(std::vector<t_value *> *)json.value;
 
@@ -12,7 +10,7 @@ void	displayArr(t_value &json, int ac_depth)
 	{
 		for (int i = 0; i < ac_depth; i++)
 			std::cout << "\t";
-		displayJson(*vals[i], ac_depth, true);
+		Json::displayJson(*vals[i], ac_depth, true);
 		if (i+1 != vals.size())
 			std::cout << ",";
 		std::cout << "\n";
@@ -22,7 +20,7 @@ void	displayArr(t_value &json, int ac_depth)
 	std::cout << "]";
 }
 
-void	displayObj(t_value &json, int ac_depth)
+void	Json::displayObj(t_value &json, int ac_depth)
 {
 	std::map<std::string, t_value *>	vals = *(std::map<std::string, t_value *> *)json.value;
 
@@ -32,7 +30,7 @@ void	displayObj(t_value &json, int ac_depth)
 			std::cout << "\t";
 		std::cout << "\"" << it->first << "\"";
 		std::cout << ":";
-		displayJson(*it->second, ac_depth, true);
+		Json::displayJson(*it->second, ac_depth, true);
 		if (it != --vals.end())
 			std::cout << ",";
 		std::cout << "\n";
@@ -42,7 +40,7 @@ void	displayObj(t_value &json, int ac_depth)
 	std::cout << "}";
 }
 
-void	displayJson(t_value &json, int ac_depth, bool in_obj)
+void	Json::displayJson(t_value &json, int ac_depth, bool in_obj)
 {
 	if (!in_obj)
 	{

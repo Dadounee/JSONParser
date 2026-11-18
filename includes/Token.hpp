@@ -1,10 +1,24 @@
 #ifndef TOKEN_HPP
 # define TOKEN_HPP
 
-# include "json.hpp"
+# include "Json.hpp"
 # include "structs.hpp"
 # include <string>
 # include <vector>
+
+typedef enum e_token_types
+{
+	undefined,
+	string,
+	number,
+	object,
+	array,
+	ttrue,
+	tfalse,
+	tnull,
+	colon,
+	comma
+}	t_token_types;
 
 class Token
 {
@@ -18,7 +32,5 @@ public:
 	Token&	operator=(const Token& other);
 	~Token();
 };
-
-t_value	*JSON_resources(std::vector<Token *> &tokens);
 
 #endif

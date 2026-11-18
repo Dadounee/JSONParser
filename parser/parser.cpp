@@ -1,9 +1,8 @@
-#include "json.hpp"
+#include "Json.hpp"
 #include "Token.hpp"
-#include "structs.hpp"
 #include <cctype>
 
-bool	is_values_parent_valid(Token *curr_parent, bool is_str)
+static bool	is_values_parent_valid(Token *curr_parent, bool is_str)
 {
 	if (curr_parent)
 	{
@@ -17,7 +16,7 @@ bool	is_values_parent_valid(Token *curr_parent, bool is_str)
 	return (true);
 }
 
-bool	check_bool(std::string& input, std::string::iterator& it, std::vector<Token *>& output, Token *&curr_parent)
+static bool	check_bool(std::string& input, std::string::iterator& it, std::vector<Token *>& output, Token *&curr_parent)
 {
 	Token	*new_token;
 	if ((std::distance(it, input.end()) >= 5 && input.compare(it - input.begin(), 4, "true") == 0) ||
@@ -43,7 +42,7 @@ bool	check_bool(std::string& input, std::string::iterator& it, std::vector<Token
 	return (false);
 }
 
-bool	do_string(std::string& input, std::string::iterator& it, std::vector<Token *>& output, Token *&curr_parent)
+static bool	do_string(std::string& input, std::string::iterator& it, std::vector<Token *>& output, Token *&curr_parent)
 {
 	std::string::iterator	start = it;
 	bool					check_backslash = false;
@@ -88,7 +87,7 @@ bool	do_string(std::string& input, std::string::iterator& it, std::vector<Token 
 	return (false);
 }
 
-bool	do_number(std::string& input, std::string::iterator& it, std::vector<Token *>& output, Token *&curr_parent)
+static bool	do_number(std::string& input, std::string::iterator& it, std::vector<Token *>& output, Token *&curr_parent)
 {
 	int						phase = 0;
 	bool					from_zero = false;
@@ -175,7 +174,7 @@ bool	do_number(std::string& input, std::string::iterator& it, std::vector<Token 
 	return (false);
 }
 
-int	tokenizer(std::string& input, std::vector<Token *>& output)
+int	Json::tokenizer(std::string& input, std::vector<Token *>& output)
 {
 	Token	curr_token("", undefined, NULL);
 	Token	*curr_parent = NULL;
