@@ -4,7 +4,9 @@ INCLUDES=-Iincludes
 SRC= \
 	main.cpp \
 	srcs/Token.cpp \
-	parser/parser.cpp
+	parser/parser.cpp \
+	interpreter/interpreter.cpp \
+	interpreter/displayJson.cpp
 
 OBJ=$(SRC:.cpp=.o)
 NAME=test

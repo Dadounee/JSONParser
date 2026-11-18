@@ -1,8 +1,10 @@
 #ifndef TOKEN_HPP
 # define TOKEN_HPP
 
-# include <string>
+# include "json.hpp"
 # include "structs.hpp"
+# include <string>
+# include <vector>
 
 class Token
 {
@@ -16,5 +18,7 @@ public:
 	Token&	operator=(const Token& other);
 	~Token();
 };
+
+t_value	*JSON_resources(std::vector<Token *> &tokens);
 
 #endif

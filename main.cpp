@@ -1,6 +1,8 @@
-# include <string>
-# include <vector>
-# include "Token.hpp"
+#include <string>
+#include <vector>
+#include "json.hpp"
+#include "Token.hpp"
+#include <iostream>
 /*
 
 {
@@ -31,9 +33,6 @@ int main(void)
 	std::string				input = "{\"obj\":{\"true\":true,\"false\":false,\"null\":null},\"arr\":[\"hello world\",12,\"test\"],\"exp\" : 1.1e07,\"float\" : 6.7,\"neg\":-5}";
 
 	int ret = tokenizer(input, res);
-
-	for (size_t i = 0; i < res.size(); i++)
-		delete res[i];
 
 	// std::vector<Token *> raw;
 
@@ -98,5 +97,21 @@ int main(void)
 	// 		Token *exemple_child5_child1 = new Token("1.1e07", number, exemple_child5);
 	// 		raw.push_back(exemple_child5_child1);
 
-	return (ret);
+	// std::vector<Token *> raw;
+
+	// Token *exemple = new Token("", array, NULL);
+	// raw.push_back(exemple);
+
+	t_value	*hoping_for_best = NULL;
+	std::cout << hoping_for_best << std::endl;
+	hoping_for_best = JSON_resources(res);
+	std::cout << hoping_for_best << std::endl;
+	// std::map<std::string, t_value *> *MYFIRSTFCKINGOBJECT = (std::map<std::string, t_value *> *)hoping_for_best->value;
+	// for (std::map<std::string, t_value *>::iterator it = MYFIRSTFCKINGOBJECT->begin(); it != MYFIRSTFCKINGOBJECT->end(); it++)
+	// 	std::cout << it->first << std::endl;
+	displayJson(*hoping_for_best, 0);
+	for (size_t i = 0; i < res.size(); i++)
+		delete res[i];
+
+	return (0);
 }
